@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
+import uuid from '../../node_modules/uuid/dist/v4';
 
-const Formulario = () => {
+const Formulario = ({ crearCita }) => {
 
     // Crear State de citas
     const [ cita, actualizarCita ] = useState({
@@ -19,6 +20,12 @@ const Formulario = () => {
             ...cita,
                [e.target.name]: e.target.value
         })
+
+        if(mascota.trim() !== '' || propietario.trim() !== '' || fecha.trim() !== '' ||
+           hora.trim() !== '' || sintomas.trim() !== ''){
+            actualizarError(false);
+            return;
+        }
     }
 
     //Funcion para enviar formulario
@@ -32,11 +39,23 @@ const Formulario = () => {
             return;
         }
 
+        //Eliminar el mensaje de error previo
+        actualizarError(false);
+
         // Asignar un ID
+        cita.id = uuid();
 
         // Crear La cita
+        crearCita(cita);
 
         // Reiniciar el form
+        actualizarCita({
+            mascota: '',
+            propietario: '',
+            fecha: '',
+            hora: '',
+            sintomas: ''
+        })
     }
 
     //Extraer los valores
